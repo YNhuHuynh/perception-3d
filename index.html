@@ -177,11 +177,13 @@
                 <p>Depth-Anything&nbsp;V2 intermediate features encode depth discontinuities, surface orientation,
                    and planar regions &mdash; far richer than a single depth map.</p>
                 <figure class="depth-fig">
-                    <img src="static/images/perception/depth_features.png" alt="Selected channels of Depth-Anything V2 path_3 features; each panel is one channel encoding a distinct structural concept." loading="lazy">
-                    <figcaption>Selected channels of DA&nbsp;V2 <code>refinenet3</code> features (top: DA&nbsp;V2 target,
-                        bottom: predicted). Each panel is a single channel &mdash; distinct ones fire on depth
-                        gradients, occlusion boundaries, and planar regions.</figcaption>
+                    <img src="static/images/perception/depth_per_object.png" alt="Depth-Anything V2 refinenet3 feature channels for the alarm clock, fedora hat, and shampoo tube; each column is one channel, rows aligned with the semantic examples." loading="lazy">
+                    <figcaption>DA&nbsp;V2 <code>refinenet3</code> features for the <strong>same three objects</strong>.
+                        Each column is one feature channel &mdash; distinct channels fire on depth gradients,
+                        occlusion boundaries, and planar regions. These 256-channel features are far richer than a
+                        single depth map.</figcaption>
                 </figure>
+                <p class="sem-pipe depth-pipe"><span>input image</span> &rarr; <span>DA&nbsp;V2</span> &rarr; <span>refinenet3 features</span> &rarr; <span class="sem-vec">depth target</span></p>
             </div>
         </div>
 
