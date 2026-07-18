@@ -376,6 +376,23 @@ footer .muted { color: var(--fg-faint); margin-top: 6px; font-size: .84rem; }
     .perception-grid2 > .pg-cell:nth-child(6) { border-top: 1px solid var(--border); }
 }
 
+/* ---------- Watch Perception Guide the Denoising ---------- */
+.traj-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    max-width: 1000px; margin: 0 auto;
+}
+.traj-fig { margin: 0; }
+.traj-fig video, .traj-fig img {
+    width: 100%; height: auto; display: block; border-radius: var(--radius);
+    border: 1px solid var(--border); box-shadow: var(--shadow); background: #fff;
+}
+.traj-fig figcaption { margin-top: 12px; color: var(--fg-soft); font-size: .95rem; text-align: center; }
+.traj-note { max-width: 820px; margin: 26px auto 0; text-align: center; color: var(--fg-faint); font-size: .85rem; }
+
+@media (max-width: 860px) {
+    .traj-grid { grid-template-columns: 1fr; }
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }

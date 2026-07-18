@@ -25,6 +25,7 @@
             <a href="#tldr">TL;DR</a>
             <a href="#method">Method</a>
             <a href="#perception">Perception</a>
+            <a href="#guidance-process">Denoising</a>
             <a href="#results">Results</a>
             <a href="#gallery">Gallery</a>
             <a href="#insights">Insights</a>
@@ -196,6 +197,38 @@
         <p class="perception-note">During training, lightweight readout heads learn to predict these targets from
            the <strong>frozen</strong> U-Net's internal features. At inference, the mismatch between prediction and
            target becomes the <strong>guidance signal</strong> that steers denoising.</p>
+    </div>
+</section>
+
+<!-- WATCH PERCEPTION GUIDE THE DENOISING -->
+<section class="guidance-process" id="guidance-process">
+    <div class="container">
+        <h2 class="section-label">Watch Perception Guide the Denoising</h2>
+        <p class="lede narrow">At every denoising step, the readout heads compare what the U-Net is generating
+           against what perception expects &mdash; and nudge the latents toward agreement. Without guidance,
+           errors compound; with it, the object converges to its true shape. Each frame is the model's
+           <strong>x&#770;<sub>0</sub> prediction</strong> at that DDIM step.</p>
+
+        <div class="traj-grid">
+            <figure class="traj-fig">
+                <video autoplay loop muted playsinline poster="static/videos/traj_oil.gif">
+                    <source src="static/videos/traj_oil.mp4" type="video/mp4">
+                    <img src="static/videos/traj_oil.gif" alt="Oil bottle denoising trajectory: baseline splinters into phantom copies while perception guidance converges to a single bottle.">
+                </video>
+                <figcaption><strong>Oil bottle.</strong> Baseline splinters into <span class="bad">phantom copies</span>;
+                    perception guidance converges to the <span class="good">true single bottle</span> (&minus;96% CD).</figcaption>
+            </figure>
+            <figure class="traj-fig">
+                <video autoplay loop muted playsinline poster="static/videos/traj_alarm.gif">
+                    <source src="static/videos/traj_alarm.mp4" type="video/mp4">
+                    <img src="static/videos/traj_alarm.gif" alt="Alarm clock denoising trajectory: baseline stays distorted while perception guidance recovers the round clock body.">
+                </video>
+                <figcaption><strong>Alarm clock.</strong> Baseline warps into a <span class="bad">tapered slab</span>;
+                    guidance restores the <span class="good">fuller, rounded body</span> (&minus;82% CD).</figcaption>
+            </figure>
+        </div>
+        <p class="traj-note">Rendered from the &ldquo;right&rdquo; view of Era3D's multi-view output (the view where the
+            baseline failure is most visible), combined guidance = depth&nbsp;+&nbsp;caption readout heads.</p>
     </div>
 </section>
 
