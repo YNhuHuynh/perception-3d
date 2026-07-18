@@ -34,17 +34,18 @@
     { key: "comb", label: "+ Combined",  ours: true  }
   ];
 
-  // cd values in raw Chamfer units; null = not reported for this cell
+  // cd values in raw Chamfer units (Era3D; bl=lr0, cap=caption_v2, dep=depth-v5, comb=combined_v2);
+  // null = not reported for this cell. Rescue cases first; chicken is an honest already-easy case.
   var OBJECTS = [
+    { id: "oil",           label: "Oil Bottle",   cd: { bl: 0.10085, cap: 0.11766, dep: 0.00243, comb: 0.00378 } },
+    { id: "stucking_cups", label: "Stacked Cups", cd: { bl: 0.07044, cap: 0.02966, dep: 0.00397, comb: 0.00442 } },
     { id: "alarm",         label: "Alarm Clock",  cd: { bl: 0.01032, cap: null,    dep: 0.00183, comb: 0.00180 } },
     { id: "hat",           label: "Hat",          cd: { bl: 0.03975, cap: 0.03837, dep: 0.02362, comb: 0.02673 } },
-    { id: "stucking_cups", label: "Stacked Cups", cd: { bl: 0.07044, cap: 0.02966, dep: 0.00397, comb: 0.00442 } },
-    { id: "chicken",       label: "Stacking Toy", cd: { bl: 0.00147, cap: 0.00171, dep: 0.00136, comb: 0.00168 } },
-    { id: "sofa",          label: "Sofa",         cd: { bl: null, cap: null, dep: null, comb: null } },
-    { id: "oil",           label: "Oil Can",      cd: { bl: null, cap: null, dep: null, comb: null } }
+    { id: "sofa",          label: "Sofa",         cd: { bl: 0.00998, cap: 0.01236, dep: 0.00746, comb: 0.00761 } },
+    { id: "chicken",       label: "Stacking Toy", cd: { bl: 0.00147, cap: 0.00171, dep: 0.00136, comb: 0.00168 } }
   ];
 
-  var state = { obj: OBJECTS[2], cond: "comb", mode: "rgb" }; // start on the dramatic cups + combined
+  var state = { obj: OBJECTS[0], cond: "comb", mode: "norm" }; // start on the oil-bottle rescue, normals
 
   var elObjects = document.getElementById("gallery-objects");
   var elTabs    = document.getElementById("condition-tabs");
