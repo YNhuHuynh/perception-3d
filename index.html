@@ -150,40 +150,46 @@
         <p class="lede narrow">Before guiding generation, our perception modules extract two complementary
            views of the object &mdash; one of <em>what it is</em>, one of <em>how it is shaped</em>.</p>
 
-        <div class="perception-grid">
-            <div class="perception-block">
+        <div class="perception-grid2">
+            <!-- Semantic column (5 rows) -->
+            <div class="pg-cell pg-head">
                 <h3><span class="pemoji">&#128483;&#65039;</span> Semantic &mdash; what the object <em>is</em></h3>
                 <p>A vision-language model describes the object in natural language; the caption is embedded
-                   into a single <strong>view-invariant</strong> semantic vector that anchors the object's identity.</p>
-                <div class="sem-examples">
-                    <div class="sem-row">
-                        <img src="static/images/teaser/alarm_input.png" alt="alarm clock input">
-                        <p class="sem-cap">&ldquo;a vintage-style <strong>alarm clock</strong>&hellip; round, rigid body with a metallic finish&hellip; a small loop handle&hellip; and a visible winding key on the side.&rdquo;</p>
-                    </div>
-                    <div class="sem-row">
-                        <img src="static/images/teaser/hat_input.png" alt="fedora hat input">
-                        <p class="sem-cap">&ldquo;a classic <strong>fedora hat</strong>&hellip; light brown straw texture and a white band&hellip; a rounded dome and a flat brim that extends outward.&rdquo;</p>
-                    </div>
-                    <div class="sem-row">
-                        <img src="static/images/teaser/oil_input.png" alt="oil bottle input">
-                        <p class="sem-cap">&ldquo;a <strong>tube</strong> of Moroccan argan-oil shampoo&hellip; cylindrical, slightly tapered shape with a rigid, smooth surface&hellip; the cap at the bottom.&rdquo;</p>
-                    </div>
-                </div>
-                <p class="sem-pipe"><span>input image</span> &rarr; <span>VLM caption</span> &rarr; <span>text encoder</span> &rarr; <span class="sem-vec">semantic vector</span></p>
+                   into a single <strong>view-invariant</strong> semantic vector that anchors its identity.</p>
+            </div>
+            <div class="pg-cell pg-sem">
+                <img src="static/images/teaser/alarm_input.png" alt="alarm clock input">
+                <p class="sem-cap">&ldquo;a vintage-style <strong>alarm clock</strong>&hellip; round, rigid body with a metallic finish&hellip; a small loop handle&hellip; and a visible winding key on the side.&rdquo;</p>
+            </div>
+            <div class="pg-cell pg-sem">
+                <img src="static/images/teaser/hat_input.png" alt="fedora hat input">
+                <p class="sem-cap">&ldquo;a classic <strong>fedora hat</strong>&hellip; light brown straw texture and a white band&hellip; a rounded dome and a flat brim that extends outward.&rdquo;</p>
+            </div>
+            <div class="pg-cell pg-sem">
+                <img src="static/images/teaser/oil_input.png" alt="shampoo tube input">
+                <p class="sem-cap">&ldquo;a <strong>tube</strong> of Moroccan argan-oil shampoo&hellip; cylindrical, slightly tapered shape with a rigid, smooth surface&hellip; the cap at the bottom.&rdquo;</p>
+            </div>
+            <div class="pg-cell pg-pipe">
+                <span>input image</span> &rarr; <span>VLM caption</span> &rarr; <span>text encoder</span> &rarr; <span class="sem-vec">semantic vector</span>
             </div>
 
-            <div class="perception-block">
+            <!-- Geometric column (5 rows) -->
+            <div class="pg-cell pg-head">
                 <h3><span class="pemoji">&#128208;</span> Geometric &mdash; how the object is <em>shaped</em></h3>
-                <p>Depth-Anything&nbsp;V2 intermediate features encode depth discontinuities, surface orientation,
-                   and planar regions &mdash; far richer than a single depth map.</p>
-                <figure class="depth-fig">
-                    <img src="static/images/perception/depth_per_object.png" alt="Depth-Anything V2 refinenet3 feature channels for the alarm clock, fedora hat, and shampoo tube; each column is one channel, rows aligned with the semantic examples." loading="lazy">
-                    <figcaption>DA&nbsp;V2 <code>refinenet3</code> features for the <strong>same three objects</strong>.
-                        Each column is one feature channel &mdash; distinct channels fire on depth gradients,
-                        occlusion boundaries, and planar regions. These 256-channel features are far richer than a
-                        single depth map.</figcaption>
-                </figure>
-                <p class="sem-pipe depth-pipe"><span>input image</span> &rarr; <span>DA&nbsp;V2</span> &rarr; <span>refinenet3 features</span> &rarr; <span class="sem-vec">depth target</span></p>
+                <p>Depth-Anything&nbsp;V2 <code>refinenet3</code> features. Four channels fire on distinct
+                   structural concepts &mdash; far richer than a single depth map:</p>
+                <div class="depth-colhead">
+                    <span>mass<small>ch 215</small></span>
+                    <span>contour<small>ch 242</small></span>
+                    <span>edges<small>ch 37</small></span>
+                    <span>orientation<small>ch 146</small></span>
+                </div>
+            </div>
+            <div class="pg-cell pg-geo"><img src="static/images/perception/depth_alarm.png" alt="DA V2 refinenet3 channels for the alarm clock: mass, contour, edges, orientation" loading="lazy"></div>
+            <div class="pg-cell pg-geo"><img src="static/images/perception/depth_hat.png" alt="DA V2 refinenet3 channels for the fedora hat: mass, contour, edges, orientation" loading="lazy"></div>
+            <div class="pg-cell pg-geo"><img src="static/images/perception/depth_tube.png" alt="DA V2 refinenet3 channels for the shampoo tube: mass, contour, edges, orientation" loading="lazy"></div>
+            <div class="pg-cell pg-pipe">
+                <span>input image</span> &rarr; <span>DA&nbsp;V2</span> &rarr; <span>refinenet3 features</span> &rarr; <span class="sem-vec">depth target</span>
             </div>
         </div>
 
