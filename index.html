@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeing Before Generating: Perception-Enhanced 3D Reconstruction</title>
+    <meta name="description" content="Pre-trained perception models rescue single-view 3D reconstruction where generative priors alone fail. NeurIPS 2026 submission.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/style.css">
+    <!-- MathJax for equations -->
+    <script>
+      window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="container nav-inner">
+        <a href="#top" class="nav-logo">PGR&#8209;3D</a>
+        <div class="nav-links">
+            <a href="#tldr">TL;DR</a>
+            <a href="#method">Method</a>
+            <a href="#results">Results</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#insights">Insights</a>
+        </div>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">&#9788;</button>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero" id="top">
+    <div class="container">
+        <p class="eyebrow">Perception rescues 3D reconstruction where generative priors fail</p>
+        <h1 class="title">Seeing Before Generating</h1>
+        <h2 class="subtitle">Object Perception Enhances Single-View 3D Reconstruction</h2>
+
+        <p class="authors">Anonymous Authors</p>
+        <p class="venue">Under Review &#183; NeurIPS 2026</p>
+
+        <div class="links">
+            <a href="#" class="link-btn" aria-disabled="true">&#128196; Paper <span class="soon">soon</span></a>
+            <a href="#results" class="link-btn">&#128202; Results</a>
+            <a href="#" class="link-btn" aria-disabled="true">&#128187; Code <span class="soon">soon</span></a>
+            <a href="#bibtex" class="link-btn">&#128278; BibTeX</a>
+        </div>
+
+        <!-- TEASER: rescue narrative -->
+        <figure class="teaser">
+            <img src="static/images/teaser/rescue_grid.png" alt="Rescue cases: baseline reconstructions collapse or distort; adding perception restores correct geometry, matching ground truth." loading="eager">
+            <figcaption>
+                <strong>The rescue effect.</strong> Where the generative prior alone
+                <span class="bad">collapses the hat</span>, <span class="bad">flattens the clock</span>, or
+                <span class="bad">multiplies the stacked cups</span>, injecting <span class="good">perception</span>
+                (semantic&nbsp;+&nbsp;geometric) steers generation back toward the true object &mdash; approaching ground truth
+                with no retraining of the base model.
+            </figcaption>
+        </figure>
+    </div>
+</section>
+
+<!-- TL;DR -->
+<section class="tldr" id="tldr">
+    <div class="container">
+        <h2 class="section-label">TL;DR</h2>
+        <p class="big-quote">
+            Pre-trained perception models can <em>rescue</em> 3D reconstruction
+            when generative priors alone fail.
+        </p>
+        <div class="key-numbers">
+            <div class="number">
+                <span class="value neg">&minus;32.7%</span>
+                <span class="label">Chamfer Distance<br>on Era3D</span>
+            </div>
+            <div class="number">
+                <span class="value neg">&minus;9.0%</span>
+                <span class="label">Chamfer Distance<br>on Wonder3D</span>
+            </div>
+            <div class="number">
+                <span class="value">2 pipelines</span>
+                <span class="label">Same recipe, both<br>architectures</span>
+            </div>
+            <div class="number">
+                <span class="value">Plug &amp; Play</span>
+                <span class="label">Backbone stays<br>frozen &mdash; no retraining</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABSTRACT -->
+<section class="abstract" id="abstract">
+    <div class="container narrow">
+        <h2 class="section-label">Abstract</h2>
+        <p>
+            The relationship between object perception and reconstruction is well established in human
+            vision, yet remains underexplored in computer vision. In this paper, we demonstrate that
+            learnt object perception can <strong>significantly enhance 3D reconstruction</strong>. Focusing on
+            the challenging task of single-view 3D object reconstruction, we propose a method that
+            leverages perceptual signals extracted from pretrained perception models &mdash; capturing
+            <strong>semantic and geometric information</strong> &mdash; to drive the reconstruction of an object from
+            its single image. Our approach is <strong>model-agnostic</strong> and can be integrated into various
+            reconstruction methods in a <strong>plug-and-play</strong> manner. Experiments with two state-of-the-art
+            single-view 3D reconstruction pipelines on a benchmark dataset show consistent and
+            substantial improvements, validating the effectiveness of incorporating perception into
+            generation. We provide in-depth analysis of various aspects of our method and its
+            application. To support future research, we will release our code and pretrained models.
+        </p>
+    </div>
+</section>
+
+<!-- METHOD -->
+<section class="method" id="method">
+    <div class="container">
+        <h2 class="section-label">How Perception Guides Generation</h2>
+        <p class="lede narrow">
+            Multi-view diffusion models hallucinate geometry from a learned prior. When that prior is
+            wrong, the reconstruction fails. We attach lightweight <strong>readout heads</strong> to a
+            <strong>frozen</strong> diffusion backbone that predict what pre-trained perception models
+            &ldquo;see&rdquo; in the object, then use the mismatch to steer the denoising latents at inference.
+        </p>
+
+        <figure class="method-diagram">
+            <img src="static/images/architecture/overview.svg" alt="PGR-3D architecture: a frozen multi-view diffusion U-Net is probed by forward hooks feeding an aggregation network and two readout heads (semantic and depth); the perception loss guides the latents.">
+        </figure>
+
+        <div class="method-details">
+            <div class="detail-block">
+                <span class="step-num">1</span>
+                <h3>Perception Extraction</h3>
+                <p>Pre-trained models capture <strong>semantic</strong> knowledge (a VLM&nbsp;+&nbsp;LLM caption,
+                   embedded with CLIP) and <strong>geometric</strong> knowledge (Depth&#8209;Anything&nbsp;V2)
+                   from the single input image.</p>
+            </div>
+            <div class="detail-block">
+                <span class="step-num">2</span>
+                <h3>Feature Alignment</h3>
+                <p>Forward hooks on the frozen U-Net decoder feed an <strong>Aggregation Network</strong>.
+                   Modality-specific readout heads project these features toward the perceptual targets &mdash;
+                   the only trained parameters in the system.</p>
+            </div>
+            <div class="detail-block">
+                <span class="step-num">3</span>
+                <h3>Guided Sampling</h3>
+                <p>At inference, gradients from the perception loss flow back through the frozen network
+                   to the noisy latents $x_t$, steering DDIM sampling toward
+                   <strong>perceptually consistent</strong> multi-view outputs.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RESULTS -->
+<section class="results" id="results">
+    <div class="container">
+        <h2 class="section-label">Results</h2>
+        <p class="lede narrow">GSO-30 benchmark. Chamfer Distance (CD, &times;10<sup>&minus;3</sup>) and volumetric IoU.
+           The same depth&nbsp;+&nbsp;caption recipe improves both backbones.</p>
+
+        <div class="results-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Setting</th>
+                        <th>CD <span class="dir">&darr;</span></th>
+                        <th>IoU <span class="dir">&uarr;</span></th>
+                        <th>PSNR <span class="dir">&uarr;</span></th>
+                        <th>&Delta;CD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="base-row"><td>Wonder3D</td><td>21.21</td><td>0.530</td><td>21.79</td><td class="dash">&mdash;</td></tr>
+                    <tr><td class="indent">+ Depth</td><td>20.18</td><td>0.534</td><td>21.86</td><td class="better">&minus;4.3%</td></tr>
+                    <tr class="ours"><td class="indent">+ Depth + Caption <span class="tag">Ours</span></td><td><strong>19.30</strong></td><td><strong>0.538</strong></td><td><strong>21.86</strong></td><td class="better"><strong>&minus;9.0%</strong></td></tr>
+                    <tr class="base-row"><td>Era3D</td><td>20.78</td><td>0.499</td><td>21.53</td><td class="dash">&mdash;</td></tr>
+                    <tr class="ours"><td class="indent">+ Depth + Caption <span class="tag">Ours</span></td><td><strong>13.99</strong></td><td><strong>0.558</strong></td><td><strong>22.05</strong></td><td class="better big"><strong>&minus;32.7%</strong></td></tr>
+                </tbody>
+            </table>
+            <p class="table-note">Era3D comparison uses a matched, guidance-free pipeline baseline. Full metric tables (SSIM, LPIPS, ablations) are in the paper.</p>
+        </div>
+
+        <!-- Interactive gallery -->
+        <h3 class="sub-head" id="gallery">Interactive Gallery</h3>
+        <p class="lede narrow">Pick an object, then step through the guidance signals. Toggle between the
+           generated <strong>RGB</strong> view and the <strong>surface normals</strong> that reveal geometry.</p>
+
+        <div class="gallery-controls">
+            <div class="gallery-objects" id="gallery-objects"><!-- JS populates --></div>
+        </div>
+
+        <div class="gallery-viewer" id="gallery-viewer">
+            <div class="viewer-fixed">
+                <figure><img id="viewer-input" src="" alt="Input image"><figcaption>Input</figcaption></figure>
+                <figure><img id="viewer-gt" src="" alt="Ground-truth mesh"><figcaption>Ground Truth</figcaption></figure>
+            </div>
+            <div class="viewer-main">
+                <div class="viewer-condition-tabs" id="condition-tabs"><!-- JS --></div>
+                <figure class="viewer-stage">
+                    <img id="viewer-result" src="" alt="Reconstruction result">
+                    <figcaption>
+                        <span id="viewer-cond-label"></span>
+                        <span id="viewer-cd" class="cd-badge"></span>
+                    </figcaption>
+                </figure>
+                <div class="viewer-modes">
+                    <button class="mode-btn active" data-mode="rgb">RGB view</button>
+                    <button class="mode-btn" data-mode="norm">Surface normals</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- QUALITATIVE -->
+<section class="qualitative" id="qualitative">
+    <div class="container">
+        <h2 class="section-label">Qualitative Results</h2>
+
+        <figure class="qual-fig">
+            <img src="static/images/qualitative/wonder3d_synergy.png" alt="Wonder3D: input, baseline, +depth, +caption, +combined, and ground truth for several objects." loading="lazy">
+            <figcaption><strong>Wonder3D synergy.</strong> Semantic and geometric signals give
+                <em>non-redundant</em> corrections; combining them wins where either alone is insufficient.</figcaption>
+        </figure>
+
+        <figure class="qual-fig">
+            <img src="static/images/qualitative/era3d_sixview.png" alt="Era3D six-view RGB and normal-map outputs under combined guidance." loading="lazy">
+            <figcaption><strong>Era3D six-view outputs.</strong> Combined guidance produces clean, view-consistent
+                RGB and surface-normal maps at 512&times;512.</figcaption>
+        </figure>
+
+        <details class="qual-more">
+            <summary>Show full 30-object Wonder3D grid</summary>
+            <figure class="qual-fig">
+                <img src="static/images/qualitative/wonder3d_grid.png" alt="Combined-guidance reconstructions across all 30 GSO objects." loading="lazy">
+                <figcaption>All 30 GSO objects under combined guidance.</figcaption>
+            </figure>
+        </details>
+    </div>
+</section>
+
+<!-- KEY INSIGHTS -->
+<section class="insights" id="insights">
+    <div class="container">
+        <h2 class="section-label">Key Insights</h2>
+        <div class="insight-cards">
+            <div class="card">
+                <div class="card-icon">&#129504;</div>
+                <h3>Semantic + Geometric = Complementary</h3>
+                <p>Language captions capture <em>identity</em>; depth captures <em>structure</em>.
+                   Combined, they provide non-redundant corrections to the generative prior.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128260;</div>
+                <h3>Works Across Architectures</h3>
+                <p>The same recipe transfers from Wonder3D (dual-stream, 256&times;256) to
+                   Era3D (single-stream, 512&times;512). Model-agnostic by design.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#9889;</div>
+                <h3>The Rescue Effect</h3>
+                <p>Perception guidance helps most where the baseline fails most
+                   (Spearman&nbsp;&rho;&nbsp;=&nbsp;&minus;0.63). For the hardest objects
+                   (CD&nbsp;&gt;&nbsp;0.05), all improved &mdash; by &minus;67% on average.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128268;</div>
+                <h3>Plug-and-Play</h3>
+                <p>Only lightweight readout heads are trained. The base diffusion model and the
+                   perception models remain <strong>frozen</strong> throughout.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BIBTEX -->
+<section class="bibtex" id="bibtex">
+    <div class="container narrow">
+        <h2 class="section-label">BibTeX</h2>
+        <div class="code-wrap">
+            <button class="copy-btn" id="copy-bib">Copy</button>
+            <pre><code>@inproceedings{anonymous2026seeing,
+  title     = {Seeing Before Generating: Object Perception
+               Enhances Single-View 3D Reconstruction},
+  author    = {Anonymous Authors},
+  booktitle = {Under review at NeurIPS},
+  year      = {2026}
+}</code></pre>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <p>The website template is based on
+           <a href="https://nerfies.github.io">Nerfies</a> and
+           <a href="https://readout-guidance.github.io">Readout Guidance</a> project pages.</p>
+        <p class="muted">Anonymous submission &#183; images are model outputs on the GSO-30 benchmark.</p>
+    </div>
+</footer>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>
