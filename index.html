@@ -126,7 +126,7 @@
         </p>
 
         <figure class="method-diagram">
-            <img src="static/images/architecture/overview.svg" alt="PGR-3D architecture: a frozen multi-view diffusion U-Net is probed by forward hooks feeding an aggregation network and two readout heads (semantic and depth); the perception loss guides the latents.">
+            <img src="static/images/architecture/framework.png" alt="PGR-3D framework. (a) Training: a frozen perception model and frozen U-Net feed a trainable Generation-Perception Alignment module (feature aggregation g + perception mapping f) that aligns U-Net features to perceptual features. (b) Inference: the perception loss gradient guides the latents, producing view-consistent RGB and normal multi-view outputs for 3D reconstruction." loading="lazy">
         </figure>
 
         <div class="method-details">
