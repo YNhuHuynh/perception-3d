@@ -24,6 +24,7 @@
         <div class="nav-links">
             <a href="#tldr">TL;DR</a>
             <a href="#method">Method</a>
+            <a href="#perception">Perception</a>
             <a href="#results">Results</a>
             <a href="#gallery">Gallery</a>
             <a href="#insights">Insights</a>
@@ -48,19 +49,6 @@
             <a href="#" class="link-btn" aria-disabled="true">&#128187; Code <span class="soon">soon</span></a>
             <a href="#bibtex" class="link-btn">&#128278; BibTeX</a>
         </div>
-
-        <!-- TEASER: rescue narrative -->
-        <figure class="teaser">
-            <img src="static/images/teaser/rescue_grid.png" alt="Rescue cases: baseline reconstructions collapse or distort; adding perception restores correct geometry, matching ground truth." loading="eager">
-            <figcaption>
-                <strong>The rescue effect.</strong> Where the generative prior alone
-                <span class="bad">collapses the hat</span>, <span class="bad">flattens the clock</span>, or
-                <span class="bad">splinters the stacked cups and oil bottle</span> into phantom copies, injecting
-                <span class="good">perception</span> (semantic&nbsp;+&nbsp;geometric) steers generation back toward the
-                true object &mdash; the oil bottle alone drops <span class="good">&minus;96% Chamfer distance</span>,
-                approaching ground truth with no retraining of the base model.
-            </figcaption>
-        </figure>
     </div>
 </section>
 
@@ -155,6 +143,54 @@
     </div>
 </section>
 
+<!-- WHAT DOES PERCEPTION SEE? -->
+<section class="perception" id="perception">
+    <div class="container">
+        <h2 class="section-label">What Does Perception See?</h2>
+        <p class="lede narrow">Before guiding generation, our perception modules extract two complementary
+           views of the object &mdash; one of <em>what it is</em>, one of <em>how it is shaped</em>.</p>
+
+        <div class="perception-grid">
+            <div class="perception-block">
+                <h3><span class="pemoji">&#128483;&#65039;</span> Semantic &mdash; what the object <em>is</em></h3>
+                <p>A vision-language model describes the object in natural language; the caption is embedded
+                   into a single <strong>view-invariant</strong> semantic vector that anchors the object's identity.</p>
+                <div class="sem-examples">
+                    <div class="sem-row">
+                        <img src="static/images/teaser/alarm_input.png" alt="alarm clock input">
+                        <p class="sem-cap">&ldquo;a vintage-style <strong>alarm clock</strong>&hellip; round, rigid body with a metallic finish&hellip; a small loop handle&hellip; and a visible winding key on the side.&rdquo;</p>
+                    </div>
+                    <div class="sem-row">
+                        <img src="static/images/teaser/hat_input.png" alt="fedora hat input">
+                        <p class="sem-cap">&ldquo;a classic <strong>fedora hat</strong>&hellip; light brown straw texture and a white band&hellip; a rounded dome and a flat brim that extends outward.&rdquo;</p>
+                    </div>
+                    <div class="sem-row">
+                        <img src="static/images/teaser/oil_input.png" alt="oil bottle input">
+                        <p class="sem-cap">&ldquo;a <strong>tube</strong> of Moroccan argan-oil shampoo&hellip; cylindrical, slightly tapered shape with a rigid, smooth surface&hellip; the cap at the bottom.&rdquo;</p>
+                    </div>
+                </div>
+                <p class="sem-pipe"><span>input image</span> &rarr; <span>VLM caption</span> &rarr; <span>text encoder</span> &rarr; <span class="sem-vec">semantic vector</span></p>
+            </div>
+
+            <div class="perception-block">
+                <h3><span class="pemoji">&#128208;</span> Geometric &mdash; how the object is <em>shaped</em></h3>
+                <p>Depth-Anything&nbsp;V2 intermediate features encode depth discontinuities, surface orientation,
+                   and planar regions &mdash; far richer than a single depth map.</p>
+                <figure class="depth-fig">
+                    <img src="static/images/perception/depth_features.png" alt="Selected channels of Depth-Anything V2 path_3 features; each panel is one channel encoding a distinct structural concept." loading="lazy">
+                    <figcaption>Selected channels of DA&nbsp;V2 <code>refinenet3</code> features (top: DA&nbsp;V2 target,
+                        bottom: predicted). Each panel is a single channel &mdash; distinct ones fire on depth
+                        gradients, occlusion boundaries, and planar regions.</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <p class="perception-note">During training, lightweight readout heads learn to predict these targets from
+           the <strong>frozen</strong> U-Net's internal features. At inference, the mismatch between prediction and
+           target becomes the <strong>guidance signal</strong> that steers denoising.</p>
+    </div>
+</section>
+
 <!-- RESULTS -->
 <section class="results" id="results">
     <div class="container">
@@ -221,12 +257,6 @@
 <section class="qualitative" id="qualitative">
     <div class="container">
         <h2 class="section-label">Qualitative Results</h2>
-
-        <figure class="qual-fig">
-            <img src="static/images/qualitative/wonder3d_synergy.png" alt="Wonder3D: input, baseline, +depth, +caption, +combined, and ground truth for several objects." loading="lazy">
-            <figcaption><strong>Wonder3D synergy.</strong> Semantic and geometric signals give
-                <em>non-redundant</em> corrections; combining them wins where either alone is insufficient.</figcaption>
-        </figure>
 
         <figure class="qual-fig">
             <img src="static/images/qualitative/era3d_sixview.png" alt="Era3D six-view RGB and normal-map outputs under combined guidance." loading="lazy">
