@@ -211,22 +211,22 @@
 
         <div class="traj-grid-1">
             <figure class="traj-fig traj-wide">
-                <video autoplay loop muted playsinline poster="static/videos/traj_full_oil.gif">
-                    <source src="static/videos/traj_full_oil.mp4" type="video/mp4">
-                    <img src="static/videos/traj_full_oil.gif" alt="Oil bottle: top row baseline splinters into phantom copies across views; bottom row perception guidance keeps a single bottle, across all 40 denoising steps.">
+                <video autoplay loop muted playsinline poster="static/videos/traj_full_hat.gif">
+                    <source src="static/videos/traj_full_hat.mp4" type="video/mp4">
+                    <img src="static/videos/traj_full_hat.gif" alt="Fedora hat: top row baseline grows a tall pointed crown in the side views; bottom row perception guidance settles the proper low fedora shape, across all 40 denoising steps.">
                 </video>
-                <figcaption><strong>Oil bottle</strong>, all 40 denoising steps. <span class="bad">Top:</span> the baseline
-                    splinters into phantom copies. <span class="good">Bottom:</span> perception guidance locks onto the
-                    true single bottle early and refines it (&minus;96% CD).</figcaption>
+                <figcaption><strong>Fedora hat</strong>, all 40 denoising steps. <span class="bad">Top:</span> the baseline
+                    grows a tall, pointed crown in the side views. <span class="good">Bottom:</span> perception guidance
+                    settles the proper low fedora shape and flat brim (&minus;33% CD).</figcaption>
             </figure>
             <figure class="traj-fig traj-wide">
-                <video autoplay loop muted playsinline poster="static/videos/traj_full_alarm.gif">
-                    <source src="static/videos/traj_full_alarm.mp4" type="video/mp4">
-                    <img src="static/videos/traj_full_alarm.gif" alt="Alarm clock: top row baseline flattens the body to a thin slab in the side views; bottom row guidance keeps a fuller rounded body, across all 40 denoising steps.">
+                <video autoplay loop muted playsinline poster="static/videos/traj_full_chicken.gif">
+                    <source src="static/videos/traj_full_chicken.mp4" type="video/mp4">
+                    <img src="static/videos/traj_full_chicken.gif" alt="Stacking chicken toy: top and bottom rows both denoise to a consistent stacked figure across all six views and 40 steps.">
                 </video>
-                <figcaption><strong>Alarm clock</strong>, all 40 steps. <span class="bad">Top:</span> the baseline
-                    collapses the body to a thin slab in the side views. <span class="good">Bottom:</span> guidance
-                    holds a fuller, rounded body (&minus;82% CD).</figcaption>
+                <figcaption><strong>Stacking toy</strong>, all 40 steps &mdash; an <span class="good">already-easy</span> case.
+                    Both rows converge to a consistent figure; perception guidance keeps the shape without harming it
+                    (baseline was already near-perfect).</figcaption>
             </figure>
         </div>
         <p class="traj-note">Era3D six-view x&#770;<sub>0</sub> prediction at every one of the 40 DDIM steps; combined
