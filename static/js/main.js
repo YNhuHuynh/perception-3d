@@ -182,4 +182,43 @@
     }, { rootMargin: "-45% 0px -50% 0px" });
     sections.forEach(function (s) { obs.observe(s.el); });
   }
+
+  /* ---------- Interactive 3D gallery (model-viewer) ---------- */
+  (function () {
+    var host = document.getElementById("model-objects");
+    var mvGt = document.getElementById("mv-gt");
+    var mvOurs = document.getElementById("mv-ours");
+    if (!host || !mvGt || !mvOurs) return;              // no-op if gallery absent
+
+    var MODELS = "static/models/";
+    var THUMBS = "static/images/teaser/";
+    var OBJS = [
+      { id: "oil",           label: "Oil Bottle" },
+      { id: "alarm",         label: "Alarm Clock" },
+      { id: "stucking_cups", label: "Stacked Cups" },
+      { id: "hat",           label: "Hat" },
+      { id: "chicken",       label: "Stacking Toy" },
+      { id: "sofa",          label: "Sofa" }
+    ];
+
+    function select(o) {
+      mvGt.setAttribute("src", MODELS + o.id + "_gt.glb");
+      mvOurs.setAttribute("src", MODELS + o.id + "_ours.glb");
+      Array.prototype.forEach.call(host.children, function (b) {
+        b.classList.toggle("active", b.dataset.id === o.id);
+      });
+    }
+
+    OBJS.forEach(function (o) {
+      var b = document.createElement("button");
+      b.className = "mobj";
+      b.type = "button";
+      b.dataset.id = o.id;
+      b.innerHTML = '<img src="' + THUMBS + o.id + '_input.png" alt="' + o.label + '"><span>' + o.label + "</span>";
+      b.addEventListener("click", function () { select(o); });
+      host.appendChild(b);
+    });
+
+    select(OBJS[0]);   // default: oil (matches initial HTML src)
+  })();
 })();

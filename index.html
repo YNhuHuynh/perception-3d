@@ -14,6 +14,8 @@
       window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- model-viewer for interactive 3D gallery -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 </head>
 <body>
 
@@ -26,6 +28,7 @@
             <a href="#perception">Perception</a>
             <a href="#guidance-process">Denoising</a>
             <a href="#results">Results</a>
+            <a href="#gallery">Gallery</a>
         </div>
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">&#9788;</button>
     </div>
@@ -35,7 +38,7 @@
 <section class="hero" id="top">
     <div class="container">
         <p class="eyebrow">Perception rescues 3D reconstruction where generative priors fail</p>
-        <h1 class="title">Seeing Before Generating</h1>
+        <h1 class="title">Seeing Before <span class="accent">Generating</span></h1>
         <h2 class="subtitle">Object Perception Enhances Single-View 3D Reconstruction</h2>
 
         <p class="authors">Anonymous Authors</p>
@@ -260,36 +263,31 @@
             <p class="table-note">Era3D comparison uses a matched, guidance-free pipeline baseline. Full metric tables (SSIM, LPIPS, ablations) are in the paper.</p>
         </div>
 
-        <!-- Interactive gallery — temporarily disabled for arXiv first draft (re-enable later)
-        <h3 class="sub-head" id="gallery">Interactive Gallery</h3>
-        <p class="lede narrow">Pick an object, then step through the guidance signals. Toggle between the
-           generated <strong>RGB</strong> view and the <strong>surface normals</strong> that reveal geometry.</p>
+        <!-- Interactive 3D gallery -->
+        <h3 class="sub-head" id="gallery">Interactive 3D Gallery</h3>
+        <p class="lede narrow">Pick an object and <strong>drag to rotate</strong>. Ground truth (left) vs. our
+           perception-guided reconstruction (right).</p>
 
         <div class="gallery-controls">
-            <div class="gallery-objects" id="gallery-objects"></div>
+            <div class="model-objects" id="model-objects"></div>
         </div>
 
-        <div class="gallery-viewer" id="gallery-viewer">
-            <div class="viewer-fixed">
-                <figure><img id="viewer-input" src="" alt="Input image"><figcaption>Input</figcaption></figure>
-                <figure><img id="viewer-gt" src="" alt="Ground-truth mesh"><figcaption>Ground Truth</figcaption></figure>
-            </div>
-            <div class="viewer-main">
-                <div class="viewer-condition-tabs" id="condition-tabs"></div>
-                <figure class="viewer-stage">
-                    <img id="viewer-result" src="" alt="Reconstruction result">
-                    <figcaption>
-                        <span id="viewer-cond-label"></span>
-                        <span id="viewer-cd" class="cd-badge"></span>
-                    </figcaption>
-                </figure>
-                <div class="viewer-modes">
-                    <button class="mode-btn active" data-mode="rgb">RGB view</button>
-                    <button class="mode-btn" data-mode="norm">Surface normals</button>
-                </div>
-            </div>
+        <div class="model-viewer-row">
+            <figure class="mv-fig">
+                <model-viewer id="mv-gt" src="static/models/oil_gt.glb" alt="Ground-truth 3D mesh"
+                    auto-rotate rotation-per-second="24deg" camera-controls touch-action="pan-y"
+                    shadow-intensity="1" exposure="1.1" interaction-prompt="none" loading="eager"></model-viewer>
+                <figcaption>Ground Truth</figcaption>
+            </figure>
+            <figure class="mv-fig">
+                <model-viewer id="mv-ours" src="static/models/oil_ours.glb" alt="Our reconstruction 3D mesh"
+                    auto-rotate rotation-per-second="24deg" camera-controls touch-action="pan-y"
+                    shadow-intensity="1" exposure="1.1" interaction-prompt="none" loading="eager"></model-viewer>
+                <figcaption>Ours <span class="mv-acc">(+ Perception)</span></figcaption>
+            </figure>
         </div>
-        -->
+        <p class="mv-note">Ground truth is shown with its original textures; our reconstruction is shown with
+           NeuS <strong>vertex colors</strong> (untextured) &mdash; surface appearance differs by rendering, not geometry.</p>
     </div>
 </section>
 
