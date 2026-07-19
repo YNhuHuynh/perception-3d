@@ -203,32 +203,37 @@
 <!-- WATCH PERCEPTION GUIDE THE DENOISING -->
 <section class="guidance-process" id="guidance-process">
     <div class="container">
-        <h2 class="section-label">Watch Perception Guide the Denoising</h2>
-        <p class="lede narrow">At every denoising step, the readout heads compare what the U-Net is generating
-           against what perception expects &mdash; and nudge the latents toward agreement. Without guidance,
-           errors compound; with it, the object converges to its true shape. Each frame is the model's
-           <strong>x&#770;<sub>0</sub> prediction</strong> at that DDIM step.</p>
+        <h2 class="section-label">Watch the Six Views Emerge</h2>
+        <p class="lede narrow">From a single front image, perception-guided Era3D denoises <strong>six views at once</strong>.
+           At every DDIM step the readout heads compare what the U-Net is generating against what perception expects
+           and nudge the latents toward agreement, so the views converge together into one consistent object.
+           Each frame is the model's <strong>x&#770;<sub>0</sub> prediction</strong> at that step.</p>
 
-        <div class="traj-grid">
+        <div class="traj-grid-1">
             <figure class="traj-fig">
-                <video autoplay loop muted playsinline poster="static/videos/traj_oil.gif">
-                    <source src="static/videos/traj_oil.mp4" type="video/mp4">
-                    <img src="static/videos/traj_oil.gif" alt="Oil bottle denoising trajectory: baseline splinters into phantom copies while perception guidance converges to a single bottle.">
+                <video autoplay loop muted playsinline poster="static/videos/traj6_hat.gif">
+                    <source src="static/videos/traj6_hat.mp4" type="video/mp4">
+                    <img src="static/videos/traj6_hat.gif" alt="Hat: front-view input beside its six generated views denoising to a consistent fedora.">
                 </video>
-                <figcaption><strong>Oil bottle.</strong> Baseline splinters into <span class="bad">phantom copies</span>;
-                    perception guidance converges to the <span class="good">true single bottle</span> (&minus;96% CD).</figcaption>
+                <figcaption><strong>Fedora hat</strong> &mdash; input (left) and its six views converging under perception guidance.</figcaption>
             </figure>
             <figure class="traj-fig">
-                <video autoplay loop muted playsinline poster="static/videos/traj_alarm.gif">
-                    <source src="static/videos/traj_alarm.mp4" type="video/mp4">
-                    <img src="static/videos/traj_alarm.gif" alt="Alarm clock denoising trajectory: baseline stays distorted while perception guidance recovers the round clock body.">
+                <video autoplay loop muted playsinline poster="static/videos/traj6_chicken.gif">
+                    <source src="static/videos/traj6_chicken.mp4" type="video/mp4">
+                    <img src="static/videos/traj6_chicken.gif" alt="Stacking chicken toy: front-view input beside its six generated views denoising.">
                 </video>
-                <figcaption><strong>Alarm clock.</strong> Baseline warps into a <span class="bad">tapered slab</span>;
-                    guidance restores the <span class="good">fuller, rounded body</span> (&minus;82% CD).</figcaption>
+                <figcaption><strong>Stacking toy</strong> &mdash; the six views resolve to one coherent stacked figure.</figcaption>
+            </figure>
+            <figure class="traj-fig">
+                <video autoplay loop muted playsinline poster="static/videos/traj6_stucking_cups.gif">
+                    <source src="static/videos/traj6_stucking_cups.mp4" type="video/mp4">
+                    <img src="static/videos/traj6_stucking_cups.gif" alt="Stacked cups: front-view input beside its six generated views denoising to a single stack.">
+                </video>
+                <figcaption><strong>Stacked cups</strong> &mdash; all six views agree on a single, correctly-ordered stack.</figcaption>
             </figure>
         </div>
-        <p class="traj-note">Rendered from the &ldquo;right&rdquo; view of Era3D's multi-view output (the view where the
-            baseline failure is most visible), combined guidance = depth&nbsp;+&nbsp;caption readout heads.</p>
+        <p class="traj-note">Era3D six-view output under combined guidance (depth&nbsp;+&nbsp;caption readout heads),
+            40 DDIM steps, x&#770;<sub>0</sub> prediction sampled every 5 steps.</p>
     </div>
 </section>
 

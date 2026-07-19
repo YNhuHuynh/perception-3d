@@ -376,11 +376,10 @@ footer .muted { color: var(--fg-faint); margin-top: 6px; font-size: .84rem; }
     .perception-grid2 > .pg-cell:nth-child(6) { border-top: 1px solid var(--border); }
 }
 
-/* ---------- Watch Perception Guide the Denoising ---------- */
-.traj-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-    max-width: 1000px; margin: 0 auto;
-}
+/* ---------- Watch the Six Views Emerge ---------- */
+.traj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1000px; margin: 0 auto; }
+/* wide input+6-view videos: stack in a single column */
+.traj-grid-1 { display: flex; flex-direction: column; gap: 26px; max-width: 940px; margin: 0 auto; }
 .traj-fig { margin: 0; }
 .traj-fig video, .traj-fig img {
     width: 100%; height: auto; display: block; border-radius: var(--radius);
