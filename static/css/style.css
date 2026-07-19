@@ -116,6 +116,10 @@ a:hover { text-decoration: underline; }
 .link-btn:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .link-btn[aria-disabled="true"] { background: var(--bg-alt); color: var(--fg-faint); border: 1px solid var(--border); box-shadow: none; }
 .link-btn .soon { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; opacity: .8; }
+.code-btn { display: inline-flex; align-items: center; gap: .5em; }
+.code-btn svg { flex: 0 0 auto; }
+.code-btn .soon { font-size: .82rem; text-transform: none; letter-spacing: 0; opacity: 1;
+    color: var(--accent); font-weight: 600; }
 
 /* ---------- TEASER ---------- */
 .teaser { margin-top: 40px; }
