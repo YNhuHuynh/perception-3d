@@ -103,7 +103,12 @@ a:hover { text-decoration: underline; }
     font-size: clamp(1.05rem, 2.4vw, 1.5rem); font-weight: 500; color: var(--fg-soft);
     margin-top: 14px; letter-spacing: -.01em;
 }
-.authors { margin-top: 26px; font-weight: 600; color: var(--fg); }
+.authors { margin-top: 26px; font-weight: 600; color: var(--fg); line-height: 1.7; }
+.authors a { color: var(--fg); text-decoration: none; }
+.authors a:hover { color: var(--accent); text-decoration: underline; }
+.authors sup { color: var(--fg-faint); font-weight: 500; font-size: .7em; }
+.affil { color: var(--fg-soft); font-size: .9rem; margin-top: 8px; line-height: 1.6; }
+.affil sup { color: var(--fg-faint); font-size: .75em; }
 .venue { color: var(--fg-faint); font-size: .95rem; margin-top: 4px; }
 
 .links { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 30px 0 10px; }
